@@ -32,3 +32,13 @@ exports.getByUser = (user, next) => {
     next(err, posts);
   });
 };
+
+// Updates post
+exports.update = (id, updatedPost, next) => {
+
+  const options = { new: true };
+
+  Post.findByIdAndUpdate(id, updatedPost, options,function(err, post){
+    next(err, post);
+  })
+};

@@ -6,6 +6,7 @@ jest.mock("../../models/post", () => ({
   create: jest.fn(),
   // FAILING FUNCTION (non existent)
   update: jest.fn(),
+  delete: jest.fn(),
 }));
 
 jest.mock("express-validator", () => ({
@@ -44,7 +45,7 @@ describe("Post Controller", () => {
 
     // expect results
     expect(postModel.create).toHaveBeenCalledWith(
-      { title: "Test post title", content: "Hello World!" },
+      { title: "Test post title", content: "Hello World!", author: "User1" },
       expect.any(Function),
     );
     expect(res.redirect).toHaveBeenCalledWith("/posts");
@@ -84,3 +85,30 @@ describe("Post Controller", () => {
     expect(res.redirect).toHaveBeenCalledWith("/posts");
   });
 });
+
+it("should delete a post", () => {
+    // mock request for new post
+    const mockPost = {
+      body: { id: "67", title: "Delete Me", content: "Please :3" },
+    };
+    req = {
+      params: { id: "67" },
+      flash: jest.fn(),
+    };
+    res = {
+      redirect: jest.fn(),
+    };
+
+    // mocking correct returns from these functions
+    validationResult.mockReturnValue({ isEmpty: () => true });
+    postModel.delete.mockImplementation((id, cb) => cb(null, data));
+
+    // run the function to be tested
+    deletePost(req, res);
+
+    // expect results
+    expect(postModel.delete).toHaveBeenCalledWith(
+      "67", expect.any(Function),
+    );
+    expect(res.redirect).toHaveBeenCalledWith("/posts");
+  });

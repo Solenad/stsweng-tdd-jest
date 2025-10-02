@@ -46,3 +46,15 @@ exports.getPost = (req, res) => {
     res.render("singlepost", { pageTitle: post.title, post: post.toObject() });
   });
 };
+
+exports.updatePost = (req,res) => {
+  const { id } = req.params
+
+  postModel.update(id, req.body, (err, post) => {
+    if (err) {
+      req.flash("error_msg", "Could not update post.");
+      return res.redirect('back');
+    }
+    res.redirect('/posts');
+  })
+}

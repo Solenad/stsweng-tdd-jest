@@ -20,4 +20,6 @@ router.get('/:id', isPrivate, postController.getPost);
 
 router.post('/add', postController.addPost);
 
+router.put('/:id')
+
 module.exports = router;
